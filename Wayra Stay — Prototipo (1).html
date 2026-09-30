@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wayra Stay — Prototipo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF8EF;--card:#FFFFFF;--ink:#2A1838;--muted:#6E6078;--line:rgba(42,24,56,.12);--pur:#71349B;--fuc:#D91468;--tur:#159EC4;--esm:#08784F;--gol:#EAC34F;--pale:#F1E6F7;--f:'Nunito',system-ui,sans-serif;--d:'Fraunces',Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1D1226;--card:#2A1B36;--ink:#F6EDE0;--muted:#B9A9C6;--line:rgba(246,237,224,.16);--pale:#3A2549}}
+:root[data-theme="dark"]{--bg:#1D1226;--card:#2A1B36;--ink:#F6EDE0;--muted:#B9A9C6;--line:rgba(246,237,224,.16);--pale:#3A2549}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;font-family:var(--f);color:var(--ink);background:#E9DCEF;display:flex;align-items:center;justify-content:center}
+button{font-family:inherit;cursor:pointer;color:inherit}
+input,textarea,select{font-family:inherit;color:var(--ink)}
+:focus-visible{outline:3px solid var(--tur);outline-offset:2px}
+.shell{position:relative;width:393px;height:820px;max-height:100%;background:var(--bg);border-radius:40px;box-shadow:0 30px 80px -20px rgba(42,24,56,.5),0 0 0 9px #1a1020;overflow:hidden;display:flex;flex-direction:column}
+@media(max-width:460px){.shell{width:100%;height:100%;border-radius:0;box-shadow:none}}
+#app{flex:1;min-height:0;overflow-y:auto;position:relative}
+.strip{height:9px;flex-shrink:0;background:repeating-linear-gradient(90deg,var(--pur) 0 14px,var(--fuc) 14px 20px,var(--gol) 20px 26px,var(--tur) 26px 32px,var(--esm) 32px 38px,var(--gol) 38px 44px)}
+.strip.thin{height:5px}
+nav{display:flex;border-top:1px solid var(--line);background:var(--card);padding:6px 2px 8px;flex-shrink:0}
+nav button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:700;color:var(--muted);padding:5px 0}
+nav button span{font-size:20px;filter:grayscale(1) opacity(.7)}
+nav button.on{color:var(--pur)}nav button.on span{filter:none}
+:root[data-theme="dark"] nav button.on,:root:not([data-theme="light"]) nav button.on{color:var(--gol)}
+.pad{padding:18px 20px 90px}
+h1{font-family:var(--d);font-size:26px;margin:0 0 4px;font-weight:800}
+h2{font-size:17px;margin:22px 0 10px;font-weight:800}
+.sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px}
+.btn{display:block;width:100%;border:0;border-radius:100px;padding:15px;font-size:15px;font-weight:800;background:var(--fuc);color:#fff;text-align:center}
+.btn.sec{background:transparent;color:var(--pur);border:2px solid var(--pur)}
+.btn.sm{display:inline-block;width:auto;padding:9px 16px;font-size:13px}
+.btn.off{background:var(--line);color:var(--muted)}
+.btn.grn{background:var(--esm)}
+.chip{display:inline-block;border:1.5px solid var(--line);background:var(--card);border-radius:100px;padding:8px 14px;font-size:13px;font-weight:700;margin:0 6px 8px 0}
+.chip.on{background:var(--pur);border-color:var(--pur);color:#fff}
+.tag{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:100px;background:var(--pale);color:var(--pur)}
+:root[data-theme="dark"] .tag{color:var(--gol)}
+.tag.g{background:#D8F0E5;color:var(--esm)}.tag.y{background:#FBEFC4;color:#6B5200}.tag.b{background:#D5EEF6;color:#0B6784}
+.sim{font-size:11.5px;color:var(--muted);background:var(--pale);border-radius:12px;padding:8px 11px;margin-top:10px;line-height:1.45}
+.sim b{color:var(--pur)}:root[data-theme="dark"] .sim b{color:var(--gol)}
+.ph{border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:40px;height:120px;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:12px}.sp{justify-content:space-between}
+.ic{width:42px;height:42px;border-radius:14px;background:var(--pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.quick button{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 4px;font-weight:800;font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.quick button span{font-size:24px}
+.hero{background:linear-gradient(150deg,var(--pur),#4a1f6b);color:#fff;border-radius:24px;padding:20px;margin-bottom:14px}
+.hero .sub{color:rgba(255,255,255,.8)}
+.hero h1{color:#fff}
+.tabs{display:flex;background:var(--pale);border-radius:100px;padding:4px;margin-bottom:12px}
+.tabs button{flex:1;border:0;background:none;padding:9px;border-radius:100px;font-weight:800;font-size:13px;color:var(--muted)}
+.tabs button.on{background:var(--card);color:var(--pur);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+input[type=text],textarea,select{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:13px;font-size:15px;background:var(--card)}
+.err{color:#B3123F;font-size:13px;font-weight:700;margin-top:8px}
+:root[data-theme="dark"] .err{color:#FF8FB1}
+.sheet-bg{position:absolute;inset:0;background:rgba(20,10,30,.55);z-index:40;display:flex;align-items:flex-end}
+.sheet{background:var(--bg);width:100%;max-height:88%;overflow-y:auto;border-radius:28px 28px 0 0;padding:20px 20px 28px}
+.map{position:relative;height:300px;border-radius:20px;background:linear-gradient(#cfeadf,#e3f2e9);border:1px solid var(--line);overflow:hidden;margin-bottom:12px}
+.map::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(35deg,transparent 0 40px,rgba(255,255,255,.7) 40px 46px),repeating-linear-gradient(-55deg,transparent 0 60px,rgba(255,255,255,.7) 60px 65px)}
+.pin{position:absolute;transform:translate(-50%,-100%);background:var(--fuc);color:#fff;border:2px solid #fff;border-radius:100px;padding:5px 9px;font-size:16px;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.pin.me{background:var(--pur)}
+.msg{max-width:80%;padding:10px 13px;border-radius:18px;font-size:14px;line-height:1.4;margin-bottom:8px}
+.msg.in{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:5px}
+.msg.out{background:var(--pur);color:#fff;margin-left:auto;border-bottom-right-radius:5px}
+.tog{width:48px;height:28px;border-radius:100px;background:var(--line);border:0;position:relative;flex-shrink:0}
+.tog::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:left .2s}
+.tog.on{background:var(--esm)}.tog.on::after{left:23px}
+.fab{position:absolute;right:16px;bottom:82px;z-index:20;background:var(--esm);color:#fff;border:0;border-radius:100px;padding:12px 18px;font-weight:800;font-size:14px;box-shadow:0 8px 20px -6px rgba(8,120,79,.7)}
+.toast{position:absolute;left:18px;right:18px;bottom:88px;background:var(--ink);color:var(--bg);padding:13px 16px;border-radius:16px;font-size:13.5px;font-weight:700;z-index:60;text-align:center}
+.empty{text-align:center;padding:26px 14px;border:2px dashed var(--line);border-radius:20px;color:var(--muted);font-size:14px;line-height:1.5}
+.welcome{min-height:100%;background:linear-gradient(170deg,#4a1f6b,var(--pur) 60%,#8b45b8);color:#fff;padding:60px 26px 30px;display:flex;flex-direction:column}
+.logo{font-family:var(--d);font-size:46px;font-weight:800;text-align:center;line-height:1}
+.mark{text-align:center;font-size:46px;margin-bottom:8px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell" id="shell"><div id="app"></div><div id="nav"></div></div>
+<script>
+const T={es:{tag:'Tu viaje empieza con una buena estadía',code:'Ingresar con código de reserva',guest:'Explorar como visitante',home:'Inicio',explore:'Explorar',acts:'Actividades',stay:'Mi estadía',prof:'Perfil'},
+en:{tag:'Your journey starts with a good stay',code:'Sign in with booking code',guest:'Explore as a visitor',home:'Home',explore:'Explore',acts:'Activities',stay:'My stay',prof:'Profile'}};
+const t=k=>T[S.lang][k];
+const PLACES=[
+{id:1,n:'Mercado de San Pedro',c:'Gastronomía',e:'🥭',km:1.2,p:0,h:'6:00 – 18:00',loc:'Calle Cascaparo s/n',d:'El mercado central de Cusco: jugos frescos, quesos y comida casera para probar sin gastar mucho.',x:38,y:62,g:'#EAC34F,#f6d98a'},
+{id:2,n:'Museo de Arte Precolombino',c:'Cultura',e:'🏺',km:0.6,p:35,h:'9:00 – 22:00',loc:'Plaza Nazarenas 231',d:'Piezas prehispánicas en una casona colonial. Ideal para entender las culturas andinas antes de salir de excursión.',x:55,y:40,g:'#71349B,#a473c9'},
+{id:3,n:'Mirador de San Blas',c:'Gratis',e:'🌄',km:0.3,p:0,h:'Abierto todo el día',loc:'Plazoleta San Blas',d:'Vista panorámica de los techos rojos de Cusco. Al atardecer se llena de fotógrafos y artistas.',x:66,y:24,g:'#159EC4,#7cd0e6'},
+{id:4,n:'Chicha by Gastón',c:'Gastronomía',e:'🍲',km:0.9,p:90,h:'12:00 – 22:00',loc:'Plaza Regocijo 261',d:'Cocina andina contemporánea: cuy confitado, quinua y ají de gallina en versión de autor.',x:46,y:52,g:'#D91468,#f07aa6'},
+{id:5,n:'Taller de Textiles Andinos',c:'Cultura',e:'🧵',km:2.4,p:60,h:'10:00 – 17:00',loc:'Av. El Sol 603',d:'Aprende a hilar y teñir lana con tintes naturales junto a maestras tejedoras.',x:25,y:76,g:'#08784F,#5fbf98'},
+{id:6,n:'Sacsayhuamán',c:'Gratis',e:'🏛️',km:2.1,p:0,h:'7:00 – 17:30',loc:'Camino a Sacsayhuamán',d:'Fortaleza inca con vistas a la ciudad. Se puede subir caminando desde el hostal en unos 30 minutos.',x:78,y:12,g:'#EAC34F,#F4E3A4'},
+{id:7,n:'Café Cultural Yanapay',c:'Gastronomía',e:'☕',km:0.4,p:25,h:'7:30 – 20:00',loc:'Calle Carmen Alto 121',d:'Café de altura y pasteles caseros. Sus ganancias apoyan proyectos comunitarios de la zona.',x:60,y:47,g:'#71349B,#b98ad6'}];
+const ACTS=[
+{id:1,n:'Clase de cocina peruana',e:'🍳',day:'Hoy',t:'18:30',dur:'2 h',p:45,cap:12,taken:9,meet:'Cocina del hostal'},
+{id:2,n:'Noche de juegos y pisco sour',e:'🎲',day:'Hoy',t:'21:00',dur:'2 h',p:0,cap:20,taken:14,meet:'Terraza, piso 3'},
+{id:3,n:'Caminata a Sacsayhuamán',e:'🥾',day:'Mañana',t:'8:00',dur:'3 h',p:0,cap:15,taken:15,meet:'Recepción'},
+{id:4,n:'Taller de tejido andino',e:'🧶',day:'Mañana',t:'15:00',dur:'2,5 h',p:60,cap:8,taken:3,meet:'Sala común'},
+{id:5,n:'Tour gratuito por San Blas',e:'🚶',day:'1 oct',t:'10:00',dur:'2 h',p:0,cap:25,taken:11,meet:'Plazoleta San Blas'}];
+const S={lang:'es',scr:'welcome',guest:false,name:'',fav:[],enr:[],cat:'Todos',bud:'Todos',dist:'Todos',view:'lista',place:null,
+reqs:[{id:1,k:'Toallas extra',s:'Resuelta',t:'Ayer, 19:10'}],
+chat:[{w:'in',m:'¡Hola! Soy Mariela, de recepción. ¿En qué te ayudo?'}],
+prefs:{voluntario:true,visible:false,notif:true,mkt:false,tipo:['Cultura']},sheet:null,ext:null,toast:'',gchat:[],gm:null,gi:0,showM:false};
+const MOODS={
+adv:{e:'🥾',l:'Aventurero/a',t:'¡Esa energía me encanta! Para hoy te propongo esto:',r:[['a',3],['p',6],['p',3]]},
+rel:{e:'😌',l:'Relajado/a',t:'Un día tranquilo también es viajar. Mira estas ideas:',r:[['p',7],['p',3],['a',2]]},
+cur:{e:'🔍',l:'Curioso/a',t:'Perfecto para conocer la cultura andina de cerca:',r:[['p',2],['a',4],['p',5]]},
+ham:{e:'😋',l:'Con hambre',t:'Vamos a comer rico. Estas opciones están cerca:',r:[['p',1],['p',4],['a',1]]},
+soc:{e:'🎉',l:'Sociable',t:'Hoy toca conocer gente. Estas actividades son en grupo y opcionales:',r:[['a',2],['a',5],['a',1]]},
+can:{e:'😴',l:'Cansado/a',t:'La altura de Cusco cansa. Toma agua y elige algo suave:',r:[['p',7],['p',3]]},
+free:{e:'🆓',l:'Algo gratis',t:'Aquí van planes sin costo:',r:[['p',3],['p',6],['a',2],['a',5]]}};
+
+function go(s){S.scr=s;S.sheet=null;render();document.getElementById('app').scrollTop=0}
+function toast(m){S.toast=m;render();setTimeout(()=>{S.toast='';render()},2600)}
+function sim(txt){return `<div class="sim"><b>Simulado:</b> ${txt}</div>`}
+function ph(p){return `<div class="ph" style="background:linear-gradient(135deg,${p.g})">${p.e}</div>`}
+
+function login(){
+  const v=document.getElementById('cod').value.trim().toUpperCase();
+  if(!v){S.err='Escribe tu código de reserva. Lo encuentras en tu correo de confirmación.';return render()}
+  if(v!=='WAYRA-2048'){S.err='No encontramos ese código. Revisa que tenga el formato WAYRA-0000 o pide ayuda en recepción.';return render()}
+  S.err='';S.guest=false;S.name='Camila';go('home')
+}
+function enter(g){S.guest=g;S.name=g?'viajero/a':'Camila';go('home')}
+function toggleFav(id){const i=S.fav.indexOf(id);if(i>-1){S.fav.splice(i,1);toast('Quitado de favoritos')}else{S.fav.push(id);toast('Guardado en favoritos ❤️')}}
+function enroll(id){
+  const a=ACTS.find(x=>x.id==id);
+  if(S.guest){return toast('Ingresa con tu código de reserva para inscribirte')}
+  if(S.enr.includes(id)){S.enr=S.enr.filter(x=>x!=id);a.taken--;return toast('Inscripción cancelada')}
+  if(a.taken>=a.cap){return toast('Sin cupos. Pide a recepción que te avise si se libera uno.')}
+  S.enr.push(id);a.taken++;toast('¡Listo! Estás inscrito/a en '+a.n)
+}
+function sendReq(k){
+  const d=(document.getElementById('rd')||{}).value||'';
+  if(k==='Reportar un problema'&&d.trim().length<5){S.rerr='Cuéntanos qué pasó para poder ayudarte (mínimo unas palabras).';return render()}
+  S.reqs.unshift({id:Date.now(),k,s:'Recibida',t:'Ahora'});S.sheet=null;S.rerr='';render();toast('Solicitud enviada a recepción');
+  setTimeout(()=>{S.reqs[0].s='En camino';render()},4000)
+}
+function sendChat(){
+  const el=document.getElementById('ci');const m=el.value.trim();
+  if(!m)return toast('Escribe un mensaje antes de enviar');
+  S.chat.push({w:'out',m});render();
+  setTimeout(()=>{S.chat.push({w:'in',m:'Gracias, lo vemos enseguida. Te respondemos en unos minutos 😊'});render();const a=document.getElementById('app');a.scrollTop=a.scrollHeight},1200)
+}
+function reqExt(){
+  const n=+document.getElementById('en').value;
+  S.ext=n;S.sheet=null;render();toast('Solicitud enviada. Te avisamos si hay disponibilidad.')
+}
+function filtered(){return PLACES.filter(p=>(S.cat==='Todos'||p.c===S.cat)&&(S.bud==='Todos'||(S.bud==='Gratis'?p.p===0:S.bud==='Hasta S/ 50'?p.p<=50:p.p>50))&&(S.dist==='Todos'||p.km<=parseFloat(S.dist)))}
+const tg=(k,v)=>{S[k]=v;render()};
+const chips=(k,opts)=>opts.map(o=>`<button class="chip ${S[k]===o?'on':''}" onclick="tg('${k}','${o}')">${o}</button>`).join('');
+
+function placeCard(p){return `<div class="card" style="padding:12px"><button style="all:unset;display:block;width:100%;cursor:pointer" onclick="S.place=${p.id};S.sheet='place';render()">
+<div class="row"><div class="ic" style="width:56px;height:56px;font-size:28px;background:linear-gradient(135deg,${p.g})">${p.e}</div>
+<div style="flex:1"><div style="font-weight:800">${p.n}</div><div class="sub" style="margin:2px 0 6px">${p.km} km · ${p.h}</div><span class="tag">${p.c}</span> <span class="tag ${p.p?'y':'g'}">${p.p?'S/ '+p.p:'Gratis'}</span></div>
+<span style="font-size:22px">${S.fav.includes(p.id)?'❤️':'🤍'}</span></div></button></div>`}
+
+const V={};
+V.welcome=()=>`<div class="welcome"><div class="mark">🏔️</div><div class="logo">Wayra Stay</div>
+<p style="text-align:center;font-size:17px;margin:14px 0 30px;line-height:1.4">${t('tag')}</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-bottom:auto">
+<button class="chip ${S.lang==='es'?'on':''}" style="background:${S.lang==='es'?'var(--fuc)':'transparent'};color:#fff;border-color:#fff" onclick="tg('lang','es')">Español</button>
+<button class="chip" style="background:${S.lang==='en'?'var(--fuc)':'transparent'};color:#fff;border-color:#fff" onclick="tg('lang','en')">English</button></div>
+<input type="text" id="cod" placeholder="WAYRA-2048" style="margin-top:30px;text-align:center;font-weight:800;letter-spacing:2px" aria-label="Código de reserva">
+${S.err?`<div class="err" style="color:#FFD3E1">${S.err}</div>`:''}
+<button class="btn" style="margin-top:12px" onclick="login()">${t('code')}</button>
+<button class="btn sec" style="margin-top:10px;color:#fff;border-color:#fff" onclick="enter(true)">${t('guest')}</button>
+<div style="font-size:12px;text-align:center;margin-top:14px;opacity:.85">Prototipo: usa el código <b>WAYRA-2048</b>. En la versión real se validaría contra el sistema de reservas.</div></div>`;
+
+V.home=()=>{const g=S.guest;return `<div class="strip"></div><div class="pad">
+<h1>Hola, ${S.name} 👋</h1><p class="sub">Cusco · 3.399 m s. n. m. Recuerda tomar agua y descansar.</p>
+${g?`<div class="empty" style="margin-bottom:14px">Estás explorando como visitante.<br>Ingresa con tu código para ver tu reserva.<br><button class="btn sm" style="margin-top:12px" onclick="go('welcome')">Ingresar con código</button></div>`:
+`<div class="hero"><span class="tag" style="background:var(--gol);color:#3b2d00">Estadía activa</span><h1 style="margin-top:10px">Noche 2 de 4</h1>
+<p class="sub" style="margin:0 0 12px">Cama 3B · Dormitorio mixto de 6</p>
+<div class="row sp" style="font-size:13px"><div><b>Check-in</b><br>28 sep · desde 14:00</div><div style="text-align:right"><b>Check-out</b><br>2 oct · hasta 11:00</div></div></div>`}
+<button class="card row" style="width:100%;text-align:left;border:2px solid var(--pur)" onclick="go('guide')"><div class="ic" style="background:var(--gol)">🦙</div><div><b>¿Cómo te sientes hoy?</b><div class="sub" style="margin:0">Cuéntale a tu guía Wayra y te sugiere un plan.</div></div></button>
+<div class="quick"><button onclick="go('stay')"><span>🛏️</span>Mi reserva</button><button onclick="go('explore')"><span>🧭</span>Explorar</button><button onclick="go('reception')"><span>🛎️</span>Recepción</button></div>
+<h2>Actividades de hoy</h2>
+${ACTS.filter(a=>a.day==='Hoy').map(a=>`<div class="card row"><div class="ic">${a.e}</div><div style="flex:1"><b>${a.n}</b><div class="sub" style="margin:0">${a.t} · ${a.p?'S/ '+a.p:'Gratis'}</div></div><button class="btn sm" onclick="go('acts')">Ver</button></div>`).join('')}
+</div>`};
+
+V.explore=()=>{const l=filtered();return `<div class="strip"></div><div class="pad"><h1>Explorar Cusco</h1><p class="sub">Lugares cerca de Wayra Stay, San Blas.</p><button class="chip" onclick="go('guide')">🦙 ¿No sabes qué elegir? Pregúntale a la guía</button>
+<div class="tabs"><button class="${S.view==='lista'?'on':''}" onclick="tg('view','lista')">☰ Lista</button><button class="${S.view==='mapa'?'on':''}" onclick="tg('view','mapa')">🗺 Mapa</button></div>
+<div>${chips('cat',['Todos','Gastronomía','Cultura','Gratis'])}</div>
+<div>${chips('bud',['Todos','Gratis','Hasta S/ 50','Más de S/ 50'])}</div>
+<div>${chips('dist',['Todos','0.5 km','1 km','2.5 km'])}</div>
+${S.view==='mapa'?`<div class="map"><div class="pin me" style="left:60%;top:35%">🏠</div>${l.map(p=>`<button class="pin" style="left:${p.x}%;top:${p.y+10}%;border:2px solid #fff" onclick="S.place=${p.id};S.sheet='place';render()" aria-label="${p.n}">${p.e}</button>`).join('')}</div>${sim('mapa ilustrativo. La versión real usaría un servicio de mapas (Google Maps, Mapbox) con ubicación en vivo.')}`:''}
+${l.length?l.map(placeCard).join(''):`<div class="empty">No hay lugares con esos filtros.<br><button class="btn sm sec" style="margin-top:12px" onclick="S.cat=S.bud=S.dist='Todos';render()">Quitar filtros</button></div>`}
+</div>`};
+
+V.acts=()=>`<div class="strip"></div><div class="pad"><h1>Actividades</h1><p class="sub">Eventos del hostal y experiencias en grupo. Unirte es siempre opcional.</p>
+${S.guest?`<div class="sim" style="margin:0 0 12px"><b>Modo visitante:</b> para inscribirte necesitas ingresar con tu código.</div>`:''}
+${ACTS.map(a=>{const on=S.enr.includes(a.id),full=a.taken>=a.cap&&!on;return `<div class="card"><div class="row"><div class="ic">${a.e}</div><div style="flex:1"><b>${a.n}</b><div class="sub" style="margin:0">${a.day} · ${a.t} · ${a.dur}</div></div><span class="tag ${a.p?'y':'g'}">${a.p?'S/ '+a.p:'Gratis'}</span></div>
+<div class="sub" style="margin:10px 0">📍 ${a.meet} · 👥 ${a.taken}/${a.cap} cupos${full?' · <b>Completo</b>':''}</div>
+<button class="btn ${on?'sec':full?'off':''}" onclick="enroll(${a.id})">${on?'Cancelar inscripción':full?'Sin cupos':'Inscribirme'}</button></div>`}).join('')}
+${sim('las inscripciones y cupos viven solo en este prototipo. En la versión real se conectarían al sistema de reservas y cobros.')}</div>`;
+
+V.stay=()=>S.guest?`<div class="strip"></div><div class="pad"><h1>Mi estadía</h1><div class="empty" style="margin-top:14px">Aquí verás tu reserva.<br>Ingresa con tu código para consultarla.<br><button class="btn sm" style="margin-top:12px" onclick="go('welcome')">Ingresar con código</button></div></div>`:
+`<div class="strip"></div><div class="pad"><h1>Mi estadía</h1><p class="sub">Reserva WAYRA-2048</p>
+<div class="card"><div class="row"><div class="ic">🛏️</div><div><b>Cama 3B · Dormitorio mixto (6)</b><div class="sub" style="margin:0">Piso 2, con lockers y baño compartido</div></div></div>
+<div class="row sp" style="margin-top:14px;font-size:14px"><div><b>Llegada</b><br>28 sep, 14:00</div><div><b>Salida</b><br>2 oct, 11:00</div><div><b>Huéspedes</b><br>1 adulto</div></div></div>
+<h2>Servicios incluidos</h2><div>${['☕ Desayuno','📶 Wifi','🧳 Guardaequipaje','🔒 Lockers','🍵 Mate de coca'].map(s=>`<span class="chip">${s}</span>`).join('')}</div>
+<div class="card row"><div class="ic">📶</div><div style="flex:1"><b>Wifi: WayraStay_Guest</b><div class="sub" style="margin:0">Clave: <b>inti2026</b></div></div><button class="btn sm sec" onclick="toast('Clave copiada')">Copiar</button></div>
+<div class="card row"><div class="ic">🥐</div><div><b>Desayuno 7:00 – 10:00</b><div class="sub" style="margin:0">Terraza, piso 3. Opción vegetariana disponible.</div></div></div>
+<h2>Normas del hostal</h2><div class="card sub" style="line-height:1.8;margin:0 0 12px">🤫 Silencio de 22:00 a 7:00<br>🚭 No fumar dentro del hostal<br>🔑 Perder la llave tiene costo de S/ 20<br>🚫 No se permiten visitas en dormitorios</div>
+<h2>Extender mi estadía</h2>
+${S.ext?`<div class="card" style="background:var(--pale)"><b>Solicitud enviada</b><div class="sub" style="margin:4px 0 0">Pediste ${S.ext} noche(s) más. Recepción confirmará según disponibilidad.</div></div>`:`<button class="btn" onclick="S.sheet='ext';render()">Solicitar más noches</button>`}
+${sim('la disponibilidad real requiere conexión con el sistema de reservas (PMS).')}</div>`;
+
+V.reception=()=>`<div class="strip"></div><div class="pad"><div class="row"><button class="btn sm sec" onclick="go('home')" aria-label="Volver">←</button><h1 style="margin:0">Recepción</h1></div>
+<div class="card row" style="margin-top:14px"><div class="ic">🕐</div><div><b>Atención 7:00 – 23:00</b><div class="sub" style="margin:0">Fuera de horario, deja tu mensaje y respondemos al abrir. Emergencias: +51 84 000 000</div></div></div>
+<h2>Solicitudes rápidas</h2><div class="quick">${[['🧺','Toallas'],['🧹','Limpieza'],['⚠️','Reportar un problema'],['🚕','Consulta de transporte']].map(([i,k])=>`<button style="font-size:12px" onclick="S.sheet='req:${k}';S.rerr='';render()"><span>${i}</span>${k}</button>`).join('')}</div>
+<h2>Estado de mis solicitudes</h2>
+${S.reqs.length?S.reqs.map(r=>`<div class="card row sp"><div><b>${r.k}</b><div class="sub" style="margin:0">${r.t}</div></div><span class="tag ${r.s==='Resuelta'?'g':r.s==='Recibida'?'y':'b'}">${r.s}</span></div>`).join(''):`<div class="empty">No tienes solicitudes.</div>`}
+<h2>Chat con recepción</h2>
+<div style="margin-bottom:10px">${S.chat.map(c=>`<div class="msg ${c.w}">${c.m}</div>`).join('')}</div>
+<div class="row"><input type="text" id="ci" placeholder="Escribe un mensaje…" aria-label="Mensaje" onkeydown="if(event.key==='Enter')sendChat()"><button class="btn sm" onclick="sendChat()">Enviar</button></div>
+${sim('el chat y el estado de las solicitudes se simulan. La versión real necesita un servicio de mensajería (por ejemplo WhatsApp Business) y un panel para el personal.')}</div>`;
+
+V.profile=()=>{const p=S.prefs;const tog=k=>`<button class="tog ${p[k]?'on':''}" role="switch" aria-checked="${!!p[k]}" onclick="S.prefs['${k}']=!S.prefs['${k}'];render()"></button>`;
+return `<div class="strip"></div><div class="pad"><h1>Perfil</h1><p class="sub">${S.guest?'Visitante':'Camila · Chile 🇨🇱'}</p>
+<h2 style="margin-top:6px">Idioma</h2><div><button class="chip ${S.lang==='es'?'on':''}" onclick="tg('lang','es')">Español</button><button class="chip ${S.lang==='en'?'on':''}" onclick="tg('lang','en')">English</button></div>
+<h2>Preferencias de viaje</h2><div>${['Cultura','Gastronomía','Aventura','Vida nocturna','Naturaleza'].map(x=>`<button class="chip ${p.tipo.includes(x)?'on':''}" onclick="const a=S.prefs.tipo;a.includes('${x}')?a.splice(a.indexOf('${x}'),1):a.push('${x}');render()">${x}</button>`).join('')}</div>
+<h2>Privacidad y convivencia</h2><div class="card">
+<div class="row sp"><div><b>Participar en actividades sociales</b><div class="sub" style="margin:0">Opcional. Puedes cambiarlo cuando quieras.</div></div>${tog('voluntario')}</div><hr style="border:0;border-top:1px solid var(--line);margin:14px 0">
+<div class="row sp"><div><b>Ser visible para otros huéspedes</b><div class="sub" style="margin:0">Desactivado por defecto. Solo se muestra tu nombre.</div></div>${tog('visible')}</div></div>
+<h2>Notificaciones</h2><div class="card"><div class="row sp"><b>Avisos de mi estadía y actividades</b>${tog('notif')}</div><hr style="border:0;border-top:1px solid var(--line);margin:14px 0"><div class="row sp"><b>Ofertas y novedades</b>${tog('mkt')}</div></div>
+<h2>Mis favoritos</h2>${S.fav.length?PLACES.filter(x=>S.fav.includes(x.id)).map(placeCard).join(''):`<div class="empty">Aún no guardas lugares.<br><button class="btn sm" style="margin-top:12px" onclick="go('explore')">Explorar lugares</button></div>`}
+<button class="btn sec" style="margin-top:14px" onclick="S.guest=false;S.fav=[];S.enr=[];go('welcome')">Cerrar sesión</button></div>`};
+
+function gEnd(){render();const a=document.getElementById('app');a.scrollTop=a.scrollHeight}
+function gRecs(id){const L=MOODS[id].r,o=[];for(let i=0;i<Math.min(2,L.length);i++)o.push(L[(S.gi+i)%L.length]);return o}
+function gReply(id){setTimeout(()=>{S.gchat.push({w:'in',m:MOODS[id].t,recs:gRecs(id)});gEnd()},700)}
+function gMood(id){S.gm=id;S.gi=0;S.showM=false;S.gchat.push({w:'out',m:MOODS[id].e+' '+MOODS[id].l});gEnd();gReply(id)}
+function gMore(){if(!S.gm)return;S.gi+=2;S.gchat.push({w:'out',m:'Otra idea'});gEnd();gReply(S.gm)}
+function gSend(){
+  const el=document.getElementById('gt'),v=el.value.trim();
+  if(!v)return toast('Escribe cómo te sientes o elige una opción');
+  const l=v.toLowerCase(),map=[['adv',/aventur|explor|caminar|energ/],['rel',/relaj|tranq|calma|descans/],['cur',/curios|cultur|museo|historia/],['ham',/hambre|comer|comida|almuerz|cena/],['soc',/social|gente|amigos|conocer/],['can',/cans|altura|sueñ|mare/],['free',/gratis|barato|econom/]];
+  const f=map.find(x=>x[1].test(l));S.gchat.push({w:'out',m:v});S.showM=false;
+  if(f){S.gm=f[0];S.gi=0;gEnd();gReply(f[0])}
+  else{gEnd();setTimeout(()=>{S.gchat.push({w:'in',m:'Aún estoy aprendiendo 🙂 ¿Cuál de estos estados se parece más a cómo te sientes?'});S.showM=true;gEnd()},700)}
+}
+function gCard(r){
+  if(r[0]==='p'){const p=PLACES.find(x=>x.id===r[1]);return `<div class="card row" style="padding:10px;margin:8px 0 0"><div class="ic" style="background:linear-gradient(135deg,${p.g})">${p.e}</div><div style="flex:1"><b>${p.n}</b><div class="sub" style="margin:0">${p.km} km · ${p.p?'S/ '+p.p:'Gratis'}</div></div><button class="btn sm" onclick="S.place=${p.id};S.sheet='place';render()">Ver</button></div>`}
+  const a=ACTS.find(x=>x.id===r[1]),on=S.enr.includes(a.id);
+  return `<div class="card row" style="padding:10px;margin:8px 0 0"><div class="ic">${a.e}</div><div style="flex:1"><b>${a.n}</b><div class="sub" style="margin:0">${a.day} ${a.t} · ${a.p?'S/ '+a.p:'Gratis'}</div></div><button class="btn sm ${on?'sec':''}" onclick="enroll(${a.id})">${on?'Cancelar':'Unirme'}</button></div>`}
+V.guide=()=>{
+  const moodChips=Object.keys(MOODS).filter(k=>k!=='free').map(k=>`<button class="chip" onclick="gMood('${k}')">${MOODS[k].e} ${MOODS[k].l}</button>`).join('');
+  const last=S.gchat[S.gchat.length-1],after=last&&last.w==='in'&&last.recs;
+  return `<div class="strip"></div><div class="pad"><div class="row"><button class="btn sm sec" onclick="go('home')" aria-label="Volver">←</button><div><h1 style="margin:0;font-size:22px">Guía Wayra 🦙</h1><div class="sub" style="margin:0">Tu asistente de viaje</div></div></div>
+  <div style="margin-top:16px"><div class="msg in">¡Hola${S.guest?'':', '+S.name}! Soy tu guía Wayra. Antes de sugerirte algo, cuéntame: <b>¿cómo te sientes hoy?</b> ¿Aventurero, relajado, con hambre…?</div>
+  ${S.gchat.length&&!S.showM?'':`<div style="margin:4px 0 12px">${moodChips}</div>`}
+  ${S.gchat.map(c=>`<div class="msg ${c.w}" style="${c.recs?'max-width:94%':''}">${c.m}${(c.recs||[]).map(gCard).join('')}</div>`).join('')}
+  ${S.showM&&S.gchat.length?`<div style="margin:4px 0 12px">${moodChips}</div>`:''}
+  ${after?`<div><button class="chip" onclick="gMore()">🔄 Otra idea</button><button class="chip" onclick="gMood('free')">🆓 Algo gratis</button><button class="chip" onclick="S.showM=true;render()">💭 Cambiar de ánimo</button></div>`:''}</div>
+  <div class="row" style="margin-top:8px"><input type="text" id="gt" placeholder="O escríbeme cómo te sientes…" aria-label="Mensaje a la guía" onkeydown="if(event.key==='Enter')gSend()"><button class="btn sm" onclick="gSend()">Enviar</button></div>
+  ${sim('las respuestas siguen reglas simples con datos del prototipo. La versión real conectaría un modelo de IA, con acceso a tu reserva y al clima, solo con tu permiso.')}</div>`};
+
+function sheet(){
+ if(!S.sheet)return'';
+ let b='';
+ if(S.sheet==='place'){const p=PLACES.find(x=>x.id===S.place);b=`${ph(p)}<h1>${p.n}</h1><div style="margin:6px 0 12px"><span class="tag">${p.c}</span> <span class="tag ${p.p?'y':'g'}">${p.p?'S/ '+p.p:'Gratis'}</span></div><p class="sub" style="color:var(--ink)">${p.d}</p><div class="card sub" style="line-height:1.8;margin:0 0 12px">🕐 ${p.h}<br>📍 ${p.loc}<br>🚶 A ${p.km} km del hostal</div>
+<button class="btn ${S.fav.includes(p.id)?'sec':''}" onclick="toggleFav(${p.id})">${S.fav.includes(p.id)?'Quitar de favoritos':'🤍 Guardar en favoritos'}</button><button class="btn sec" style="margin-top:8px" onclick="toast('Abriendo indicaciones (simulado)')">Cómo llegar</button>${sim('las indicaciones reales abrirían Google Maps o Apple Maps.')}`}
+ else if(S.sheet==='ext'){b=`<h1>Extender estadía</h1><p class="sub">Tu salida actual es el 2 oct. ¿Cuántas noches más?</p><select id="en"><option value="1">1 noche</option><option value="2">2 noches</option><option value="3">3 noches</option></select>${sim('en el sistema real se verificaría la disponibilidad de tu cama antes de confirmar.')}<button class="btn" style="margin-top:14px" onclick="reqExt()">Enviar solicitud</button>`}
+ else{const k=S.sheet.slice(4);b=`<h1>${k}</h1><p class="sub">Añade un detalle si quieres. Recepción lo verá de inmediato.</p><textarea id="rd" rows="3" placeholder="${k==='Reportar un problema'?'Ej: la luz de mi cama no funciona':'Ej: para la habitación 3B'}"></textarea>${S.rerr?`<div class="err">${S.rerr}</div>`:''}<button class="btn" style="margin-top:14px" onclick="sendReq('${k}')">Enviar solicitud</button>`}
+ return `<div class="sheet-bg" onclick="if(event.target===this){S.sheet=null;render()}"><div class="sheet" role="dialog" aria-modal="true"><button class="btn sm sec" style="float:right" onclick="S.sheet=null;render()">Cerrar</button>${b}</div></div>`
+}
+function render(){
+ const sc=S.scr,main=['home','explore','acts','stay','profile'].includes(sc),a=document.getElementById('app'),y=a.scrollTop;
+ a.innerHTML=V[sc]()+sheet()+(main&&sc!=='reception'&&!S.guest||main&&S.guest?'':'');
+ document.getElementById('nav').innerHTML=(main||sc==='reception'||sc==='guide')?`<nav>${[['home','🏠'],['explore','🧭'],['acts','🎟️'],['stay','🛏️'],['profile','👤']].map(([k,i])=>`<button class="${sc===k?'on':''}" onclick="go('${k}')"><span>${i}</span>${t(k==='stay'?'stay':k==='acts'?'acts':k==='profile'?'prof':k)}</button>`).join('')}</nav>`:'';
+ if(main&&!S.sheet){const f=document.getElementById('shell').querySelector('.fab');}
+ if(sc!=='welcome'&&sc!=='reception'&&main){a.insertAdjacentHTML('beforeend','')}
+ a.scrollTop=y;
+ const old=document.getElementById('fab');if(old)old.remove();
+ if(main){document.getElementById('shell').insertAdjacentHTML('beforeend','<button class="fab" id="fab" onclick="go(\'reception\')">🛎️ Recepción</button>')}
+ const ot=document.getElementById('tst');if(ot)ot.remove();
+ if(S.toast)document.getElementById('shell').insertAdjacentHTML('beforeend',`<div class="toast" id="tst" role="status">${S.toast}</div>`);
+}
+render();
+</script>
+</body>
+</html>
